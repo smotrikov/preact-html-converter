@@ -66,13 +66,13 @@ const traverse = rootNode => {
 	return (nodeTree.length === 1) ? nodeTree[0] : nodeTree;
 };
 
-function ReactHTMLConverter() {}
+function PreactHTMLConverter() {}
 
-ReactHTMLConverter.prototype.registerComponent = (name, componentClass) => {
+PreactHTMLConverter.prototype.registerComponent = (name, componentClass) => {
 	components[name] = componentClass;
 };
 
-ReactHTMLConverter.prototype.convert = htmlString => {
+PreactHTMLConverter.prototype.convert = htmlString => {
 	if (typeof htmlString !== 'string') {
 		return null;
 	}
@@ -86,7 +86,7 @@ ReactHTMLConverter.prototype.convert = htmlString => {
 	return null;
 };
 
-ReactHTMLConverter.prototype.convertStatic = htmlString => {
+PreactHTMLConverter.prototype.convertStatic = htmlString => {
 	if (typeof htmlString !== 'string') {
 		return null;
 	}
@@ -113,4 +113,4 @@ ReactHTMLConverter.prototype.convertStatic = htmlString => {
 	return null;
 };
 
-module.exports = ReactHTMLConverter;
+module.exports = PreactHTMLConverter;
