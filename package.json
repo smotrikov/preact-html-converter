@@ -1,6 +1,6 @@
 {
   "name": "preact-html-converter",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Converts a raw HTML string into Preact Elements.",
   "main": "dist/preact-html-converter.js",
   "repository": "https://github.com/Sethorax/react-html-converter.git",
