@@ -70,13 +70,13 @@ var traverse = function traverse(rootNode) {
 	return nodeTree.length === 1 ? nodeTree[0] : nodeTree;
 };
 
-function ReactHTMLConverter() {}
+function PreactHTMLConverter() {}
 
-ReactHTMLConverter.prototype.registerComponent = function (name, componentClass) {
+PreactHTMLConverter.prototype.registerComponent = function (name, componentClass) {
 	components[name] = componentClass;
 };
 
-ReactHTMLConverter.prototype.convert = function (htmlString) {
+PreactHTMLConverter.prototype.convert = function (htmlString) {
 	if (typeof htmlString !== 'string') {
 		return null;
 	}
@@ -90,7 +90,7 @@ ReactHTMLConverter.prototype.convert = function (htmlString) {
 	return null;
 };
 
-ReactHTMLConverter.prototype.convertStatic = function (htmlString) {
+PreactHTMLConverter.prototype.convertStatic = function (htmlString) {
 	if (typeof htmlString !== 'string') {
 		return null;
 	}
@@ -117,4 +117,4 @@ ReactHTMLConverter.prototype.convertStatic = function (htmlString) {
 	return null;
 };
 
-module.exports = ReactHTMLConverter;
+module.exports = PreactHTMLConverter;
