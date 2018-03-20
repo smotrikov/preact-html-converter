@@ -19,6 +19,7 @@
     "babel-jest": "^23.0.0-alpha.0",
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "babel-preset-env": "^1.6.1",
+    "bundlesize": "^0.16.0",
     "eslint": "^4.19.0",
     "eslint-config-defaults": "^9.0.0",
     "eslint-plugin-react": "^7.7.0",
@@ -30,6 +31,6 @@
   "scripts": {
     "test": "eslint src && jest",
     "prepublish": "npm run build",
-    "build": "microbundle src/integrations/*.js -o x.js -f cjs --external all --sourcemap false"
+    "build": "microbundle src/integrations/*.js -o x.js -f cjs --external all"
   }
 }
