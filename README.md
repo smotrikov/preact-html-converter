@@ -1,4 +1,4 @@
-# preact-html-converter [![Build Status](https://travis-ci.org/Sethorax/preact-html-converter.svg?branch=master)](https://travis-ci.org/Sethorax/preact-html-converter) [![npm version](https://badge.fury.io/js/preact-html-converter.svg)](https://badge.fury.io/js/react-html-converter)
+# preact-html-converter [![Build Status](https://travis-ci.org/Sethorax/preact-html-converter.svg?branch=master)](https://travis-ci.org/Sethorax/preact-html-converter) [![npm version](https://badge.fury.io/js/preact-html-converter.svg)](https://badge.fury.io/js/preact-html-converter)
 
 This module converts a raw HTML string to a Preact element or an array of Preact elements. Component rendering is also supported.  
 
