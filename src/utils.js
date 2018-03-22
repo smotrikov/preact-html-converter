@@ -1,5 +1,4 @@
 import { h } from 'preact';
-import { getComponent } from './component-manager';
 
 const NODE_TYPE_TEXT = '#text';
 const NODE_TYPE_COMMENT = '#comment';
@@ -9,13 +8,14 @@ const NODE_TYPE_COMMENT = '#comment';
  *
  * @export
  * @param {Node} rootNode
+ * @param {Map} registeredComponents
  * @returns {Array}
  */
-export function traverseNodeTree(rootNode) {
+export function traverseNodeTree(rootNode, registeredComponents) {
 	const nodeTree = [];
 
 	for (let i = 0; i < rootNode.childNodes.length; i++) {
-		nodeTree.push(convertNode(rootNode.childNodes[i], i));
+		nodeTree.push(convertNode(rootNode.childNodes[i], i, registeredComponents));
 	}
 
 	return (nodeTree.length === 1) ? nodeTree[0] : nodeTree;
@@ -29,14 +29,15 @@ export function traverseNodeTree(rootNode) {
  * @export
  * @param {Node} node
  * @param {number} key
+ * @param {Map} registeredComponents
  * @returns {string|Object}
  */
-export function convertNode(node, key) {
+export function convertNode(node, key, registeredComponents) {
 	if (node.nodeName === NODE_TYPE_TEXT || node.nodeName === NODE_TYPE_COMMENT) {
 		return node.value || node.nodeValue;
 	}
 
-	const component = getComponent(node.nodeName);
+	const component = registeredComponents.get(node.nodeName.toLowerCase());
 	const attributes = convertAttributes(node.attrs || node.attributes, key);
 	const tagName = component ? component : node.tagName.toLowerCase();
 
@@ -47,7 +48,7 @@ export function convertNode(node, key) {
 	const children = [];
 
 	for (let i = 0; i < node.childNodes.length; i++) {
-		children.push(convertNode(node.childNodes[i], i));
+		children.push(convertNode(node.childNodes[i], i, registeredComponents));
 	}
 
 	return h(tagName, attributes, children);

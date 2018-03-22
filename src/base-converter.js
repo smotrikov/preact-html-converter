@@ -1,58 +1,43 @@
+/* global Map */
+
 import { h } from 'preact';
-import { registerComponent } from './component-manager';
 import { traverseNodeTree, convertAttributes } from './utils';
 
-/**
- * BaseConverter class.
- * Holds all methods shared by all integrations.
- *
- * @export
- * @class BaseConverter
- */
-export default class BaseConverter {
-	/**
-	 * Creates an instance of BaseConverter.
-	 * Parser will be passed by integration classes.
-	 *
-	 * @param {Object} parser
-	 * @memberof BaseConverter
-	 */
-	constructor(parser) {
-		this.parser = parser;
-	}
+export function BaseConverter(parser) {
+	const registeredComponents = new Map();
 
-	/**
-	 * Register a Preact component with the given name.
-	 *
-	 * @param {string} name
-	 * @param {any} componentClass
-	 * @memberof BaseConverter
-	 */
-	registerComponent(name, componentClass) {
-		registerComponent(name, componentClass);
-	}
+	return {
+		/**
+		 * Convert a html string to Preact elements or components.
+		 *
+		 * @param {String} htmlString
+		 * @returns {Array|null}
+		 */
+		convert: htmlString => {
+			if (typeof htmlString !== 'string') {
+				return null;
+			}
 
-	/**
-	 * Parse the html string and traverse the resulting nodes.
-	 * Returns an array of Preact elements or components.
-	 *
-	 * @param {string} htmlString
-	 * @returns
-	 * @memberof BaseConverter
-	 */
-	convert(htmlString) {
-		if (typeof htmlString !== 'string') {
+			const html = parser.parseFragment(htmlString);
+
+			if (html.childNodes.length > 0) {
+				return traverseNodeTree(html, registeredComponents);
+			}
+
 			return null;
+		},
+
+		/**
+		 * Register a Preact component.
+		 *
+		 * @param {String} name
+		 * @param {React.Component} componentClass
+		 */
+		registerComponent: (name, componentClass) => {
+			registeredComponents.set(name.toLowerCase(), componentClass);
 		}
-
-		const html = this.parser.parseFragment(htmlString);
-
-		if (html.childNodes.length > 0) {
-			return traverseNodeTree(html);
-		}
-
-		return null;
 	}
+}
 
 	/**
 	 * Parse the html string with the specified parser.
@@ -70,10 +55,9 @@ export default class BaseConverter {
 	 * @static
 	 * @param {string} htmlString
 	 * @param {Object} parser
-	 * @returns
-	 * @memberof BaseConverter
+	 * @returns {vNode|null}
 	 */
-	static convertStatic(htmlString, parser) {
+	export function baseConvertStatic(htmlString, parser) {
 		if (typeof htmlString !== 'string') {
 			return null;
 		}
@@ -99,4 +83,3 @@ export default class BaseConverter {
 
 		return null;
 	}
-}

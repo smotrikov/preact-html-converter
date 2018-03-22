@@ -46,7 +46,7 @@ class Test extends Preact.Component {
     );
 }
 
-const converter = new PreactHTMLConverter();
+const converter = PreactHTMLConverter();
 converter.registerComponent('test', Test);
 
 const html = '<div class="my-div"><Test text="Hello World" /></div>';
@@ -69,7 +69,7 @@ The PreactHTMLConverter is also able to create Preact components from the HTML s
 Please note that any sibling nodes of a Preact component will not be rendered! Make sure to wrap the component with a div element.
 
 ### Static rendering
-You can use the static method `convertStatic` of the PreactHTMLConverter class to render the given HTML string as static elements. Preact will not be aware of the content rendered by this method and Preact components will not be rendered by this method.
+If you just want to quickly render a html string, you can import the `convertStatic` function of this module. With this function only the root node will be converted to a React element. All child nodes will be rendered with `dangerouslySetInnerHTML`.
 
 ## License
 
