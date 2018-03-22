@@ -16,7 +16,7 @@ or **yarn**:
 
 This module ships with two integrations. One for node and one for the browser.  
 
-> The browser version only depends on `preact` and is just **862 Bytes** in filesize!
+> The browser version only depends on `preact` and is just **~800 Bytes** in filesize!
 
 The main reason behind having to versions is that altough the node version also works in the browser, the usage of `parse5` does add a lot to the overall bundle filesize. Therefore the browser version uses the native `DOMParser` instead of `parse5` to handle the html string parsing.
 
