@@ -10,7 +10,7 @@ global.DOMParser = class DOMParserMock {
 
 import Preact, { h } from 'preact';
 import render from 'preact-render-to-string';
-import PreactHTMLConverter, { convertStatic } from '../src/integrations/browser';
+import { PreactHTMLConverter, convertStatic } from '../src/integrations/browser';
 
 class Test extends Preact.Component {
 	render() {

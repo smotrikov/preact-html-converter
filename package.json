@@ -1,6 +1,6 @@
 {
   "name": "preact-html-converter",
-  "version": "0.3.0",
+  "version": "0.3.2",
   "description": "Converts a raw HTML string into Preact Elements or even Preact Components. Ships with integrations for node and browser.",
   "keywords": [
     "preact",

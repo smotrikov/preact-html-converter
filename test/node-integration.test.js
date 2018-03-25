@@ -1,6 +1,6 @@
 import Preact, { h } from 'preact';
 import render from 'preact-render-to-string';
-import PreactHTMLConverter, { convertStatic } from '../src/integrations/node';
+import { PreactHTMLConverter, convertStatic } from '../src/integrations/node';
 
 class Test extends Preact.Component {
 	render() {
