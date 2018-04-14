@@ -4,6 +4,17 @@ const NODE_TYPE_TEXT = '#text';
 const NODE_TYPE_COMMENT = '#comment';
 
 /**
+ * Lightweight Object.assign implementation
+ * 
+ * @param {Object} obj 
+ * @param {Object} props 
+ */
+export function assign(obj, props) {
+	for (let i in props) obj[i] = props[i];
+	return obj;
+}
+
+/**
  * Returns an array of a node's child nodes.
  *
  * @export
@@ -86,16 +97,16 @@ export function convertStylesToObject(styleString) {
 		if (styleDeclaration) {
 			const parts = styleDeclaration.split(':');
 			const key = parts[0].trim();
-			const keyArray = Array.from(key);
+			const keyCharacters = key.split('');
 
-			Array.from(key).forEach((char, index) => {
-				if (char === '-') {
-					keyArray[index + 1] = keyArray[index + 1].toUpperCase();
-					keyArray[index] = null;
+			for (let index = 0; index < keyCharacters; index++) {
+				if (keyCharacters[index] === '-') {
+					keyCharacters[index + 1] = keyCharacters[index + 1].toUpperCase();
+					keyCharacters[index] = null;
 				}
-			});
+			}
 
-			obj[keyArray.join('')] = parts[1];
+			obj[keyCharacters.join('')] = parts[1];
 		}
 
 		return obj;

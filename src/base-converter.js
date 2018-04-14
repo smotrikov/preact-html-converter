@@ -1,7 +1,7 @@
 /* global Map */
 
 import { h } from 'preact';
-import { traverseNodeTree, convertAttributes } from './utils';
+import { traverseNodeTree, convertAttributes, assign } from './utils';
 
 export function BaseConverter(parser) {
 	const registeredComponents = new Map();
@@ -69,7 +69,7 @@ export function BaseConverter(parser) {
 
 			if (html.childNodes.length === 1) {
 				const node = html.childNodes[0];
-				rootNode = h(node.nodeName.toLowerCase(), Object.assign({
+				rootNode = h(node.nodeName.toLowerCase(), assign({
 					dangerouslySetInnerHTML: {
 						__html: parser.serialize(node)
 					}
