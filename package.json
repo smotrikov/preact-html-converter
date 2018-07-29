@@ -83,7 +83,6 @@
     }
   },
   "pre-commit": [
-    "test",
-    "build"
+    "test"
   ]
 }
