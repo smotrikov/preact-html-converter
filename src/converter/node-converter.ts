@@ -1,4 +1,4 @@
-import { Attribute, DefaultTreeElement, DefaultTreeNode, DefaultTreeTextNode, DefaultTreeCommentNode, DefaultTreeDocumentFragment } from "parse5";
+import { Attribute, DefaultTreeElement, DefaultTreeNode, DefaultTreeTextNode, DefaultTreeDocumentFragment } from "parse5";
 import { ComponentConstructor, h, VNode } from "preact";
 import { NodeParser } from "../parser/node-parser";
 import { assign, NodeType, convertStylesToObject, trimHTMLString } from "../utils";
@@ -36,17 +36,15 @@ const convertElement = (element: DefaultTreeElement, key: number, registeredComp
 };
 
 const convertNode = (node: DefaultTreeNode, key: number, registeredComponents: Map<string, ComponentConstructor>): string|VNode => {
-    if (isTextNode(node)) {
+    if (isTextNode(node) && node.value.trim() !== "") {
         return node.value;
-    }
-
-    if (isCommentNode(node)) {
-        return null;
     }
 
     if (isElement(node)) {
         return convertElement(node, key, registeredComponents);
     }
+
+    return null;
 };
 
 const traverseNodeTree = (rootNode: DefaultTreeDocumentFragment, registeredComponents: Map<string, ComponentConstructor>): Array<string|VNode> => {
@@ -62,11 +60,6 @@ const traverseNodeTree = (rootNode: DefaultTreeDocumentFragment, registeredCompo
 const isTextNode = (node: DefaultTreeNode): node is DefaultTreeTextNode => {
     return node.nodeName === NodeType.Text && (<DefaultTreeTextNode>node).value !== undefined;
 };
-
-const isCommentNode = (node: DefaultTreeNode): node is DefaultTreeCommentNode => {
-    return node.nodeName === NodeType.Comment && (<DefaultTreeCommentNode>node).data !== undefined;
-};
-
 
 const isElement = (node: DefaultTreeNode): node is DefaultTreeElement => {
     return (<DefaultTreeElement>node).attrs !== undefined;
@@ -86,7 +79,9 @@ export function BaseConverter(parser: NodeParser) {
             const fragment = parser.parseFragment(htmlString);
 
             if (fragment.childNodes.length > 0) {
-                return traverseNodeTree(fragment, registeredComponents);
+                return traverseNodeTree(fragment, registeredComponents).filter(value => {
+                    return value ? true : false;
+                });
             }
 
             return null;

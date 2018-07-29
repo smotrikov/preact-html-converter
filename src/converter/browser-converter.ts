@@ -36,17 +36,15 @@ const convertElement = (element: Element, key: number, registeredComponents: Map
 };
 
 const convertNode = (node: Node, key: number, registeredComponents: Map<string, ComponentConstructor>): string|VNode => {    
-    if (node.nodeName === NodeType.Text) {
+    if (node.nodeName === NodeType.Text && node.nodeValue.trim() !== "") {
         return node.nodeValue;
-    }
-
-    if (node.nodeName === NodeType.Comment) {
-        return null;
     }
 
     if (isElement(node)) {
         return convertElement(node, key, registeredComponents);
     }
+
+    return null;
 };
 
 const traverseNodeTree = (rootNode: Element, registeredComponents: Map<string, ComponentConstructor>): Array<string|VNode> => {
@@ -77,7 +75,9 @@ export function BaseConverter(parser: BrowserParser) {
             const fragment = parser.parseFragment(htmlString);
 
             if (fragment.childNodes.length > 0) {
-                return traverseNodeTree(fragment, registeredComponents);
+                return traverseNodeTree(fragment, registeredComponents).filter(value => {
+                    return value ? true : false;
+                });
             }
 
             return null;

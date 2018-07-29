@@ -96,15 +96,13 @@
         return component ? preact.h(component, attributes, children) : preact.h(tagName, attributes, children);
     };
     var convertNode = function (node, key, registeredComponents) {
-        if (node.nodeName === NodeType.Text) {
+        if (node.nodeName === NodeType.Text && node.nodeValue.trim() !== "") {
             return node.nodeValue;
-        }
-        if (node.nodeName === NodeType.Comment) {
-            return null;
         }
         if (isElement(node)) {
             return convertElement(node, key, registeredComponents);
         }
+        return null;
     };
     var traverseNodeTree = function (rootNode, registeredComponents) {
         var nodeTree = new Array();
@@ -126,7 +124,9 @@
                 htmlString = trimHTMLString(htmlString);
                 var fragment = parser.parseFragment(htmlString);
                 if (fragment.childNodes.length > 0) {
-                    return traverseNodeTree(fragment, registeredComponents);
+                    return traverseNodeTree(fragment, registeredComponents).filter(function (value) {
+                        return value ? true : false;
+                    });
                 }
                 return null;
             },

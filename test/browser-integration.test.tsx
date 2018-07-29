@@ -39,7 +39,7 @@ describe('main:browser', () => {
 		const converter = PreactHTMLConverter();
 		const html = '<div id="root"> <ul> <li>item-1</li> <li>item-2</li> <li>item-3</li> <li>item-4</li> <li>item-5</li> </ul> </div>';
 
-		renderTest(converter.convert(html)[0], html);
+		renderTest(converter.convert(html)[0], html.replace(/>\s</g, '><'));
 	});
 
 	it('should return an array of vNode elements if serveral sibling nodes are provided', () => {
@@ -132,5 +132,13 @@ describe('main:browser', () => {
 		const resultHtml = '<ul><li>One</li><li>Two</li><li>Three</li><li>Four</li><li>Five</li></ul>';
 
 		renderTest(convertStatic(html), resultHtml);
+	});
+
+	it('should ignore whitespaces', () => {
+		const converter = PreactHTMLConverter();
+		const html = `<li>One</li>    <li>Two</li>    <li>Three</li>`;
+
+		const elements = converter.convert(html);
+		expect(elements.length).toBe(3);
 	});
 });

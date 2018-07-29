@@ -27,15 +27,13 @@ var convertElement = function (element, key, registeredComponents) {
     return component ? preact_1.h(component, attributes, children) : preact_1.h(tagName, attributes, children);
 };
 var convertNode = function (node, key, registeredComponents) {
-    if (node.nodeName === utils_1.NodeType.Text) {
+    if (node.nodeName === utils_1.NodeType.Text && node.nodeValue.trim() !== "") {
         return node.nodeValue;
-    }
-    if (node.nodeName === utils_1.NodeType.Comment) {
-        return null;
     }
     if (isElement(node)) {
         return convertElement(node, key, registeredComponents);
     }
+    return null;
 };
 var traverseNodeTree = function (rootNode, registeredComponents) {
     var nodeTree = new Array();
@@ -57,7 +55,9 @@ function BaseConverter(parser) {
             htmlString = utils_1.trimHTMLString(htmlString);
             var fragment = parser.parseFragment(htmlString);
             if (fragment.childNodes.length > 0) {
-                return traverseNodeTree(fragment, registeredComponents);
+                return traverseNodeTree(fragment, registeredComponents).filter(function (value) {
+                    return value ? true : false;
+                });
             }
             return null;
         },

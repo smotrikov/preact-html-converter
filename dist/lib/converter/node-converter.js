@@ -27,15 +27,13 @@ var convertElement = function (element, key, registeredComponents) {
     return component ? preact_1.h(component, attributes, children) : preact_1.h(tagName, attributes, children);
 };
 var convertNode = function (node, key, registeredComponents) {
-    if (isTextNode(node)) {
+    if (isTextNode(node) && node.value.trim() !== "") {
         return node.value;
-    }
-    if (isCommentNode(node)) {
-        return null;
     }
     if (isElement(node)) {
         return convertElement(node, key, registeredComponents);
     }
+    return null;
 };
 var traverseNodeTree = function (rootNode, registeredComponents) {
     var nodeTree = new Array();
@@ -46,9 +44,6 @@ var traverseNodeTree = function (rootNode, registeredComponents) {
 };
 var isTextNode = function (node) {
     return node.nodeName === utils_1.NodeType.Text && node.value !== undefined;
-};
-var isCommentNode = function (node) {
-    return node.nodeName === utils_1.NodeType.Comment && node.data !== undefined;
 };
 var isElement = function (node) {
     return node.attrs !== undefined;
@@ -63,7 +58,9 @@ function BaseConverter(parser) {
             htmlString = utils_1.trimHTMLString(htmlString);
             var fragment = parser.parseFragment(htmlString);
             if (fragment.childNodes.length > 0) {
-                return traverseNodeTree(fragment, registeredComponents);
+                return traverseNodeTree(fragment, registeredComponents).filter(function (value) {
+                    return value ? true : false;
+                });
             }
             return null;
         },

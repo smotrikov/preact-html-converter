@@ -91,15 +91,13 @@ var convertElement = function (element, key, registeredComponents) {
     return component ? h(component, attributes, children) : h(tagName, attributes, children);
 };
 var convertNode = function (node, key, registeredComponents) {
-    if (isTextNode(node)) {
+    if (isTextNode(node) && node.value.trim() !== "") {
         return node.value;
-    }
-    if (isCommentNode(node)) {
-        return null;
     }
     if (isElement(node)) {
         return convertElement(node, key, registeredComponents);
     }
+    return null;
 };
 var traverseNodeTree = function (rootNode, registeredComponents) {
     var nodeTree = new Array();
@@ -110,9 +108,6 @@ var traverseNodeTree = function (rootNode, registeredComponents) {
 };
 var isTextNode = function (node) {
     return node.nodeName === NodeType.Text && node.value !== undefined;
-};
-var isCommentNode = function (node) {
-    return node.nodeName === NodeType.Comment && node.data !== undefined;
 };
 var isElement = function (node) {
     return node.attrs !== undefined;
@@ -127,7 +122,9 @@ function BaseConverter(parser) {
             htmlString = trimHTMLString(htmlString);
             var fragment = parser.parseFragment(htmlString);
             if (fragment.childNodes.length > 0) {
-                return traverseNodeTree(fragment, registeredComponents);
+                return traverseNodeTree(fragment, registeredComponents).filter(function (value) {
+                    return value ? true : false;
+                });
             }
             return null;
         },
