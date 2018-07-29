@@ -16,31 +16,19 @@ or **yarn**:
 
 This module ships with two integrations. One for node and one for the browser.  
 
-> The browser version only depends on `preact` and is just **~800 Bytes** in filesize!
+> The browser version only depends on `preact` and uses the native `DOMParser`!
 
 The main reason behind having to versions is that altough the node version also works in the browser, the usage of `parse5` does add a lot to the overall bundle filesize. Therefore the browser version uses the native `DOMParser` instead of `parse5` to handle the html string parsing.
 
 Module usage is the same for node and for the browser.
 
-If you use this module in node.js just import the node integration:  
-
-```js
-import PreactHTMLConverter from 'preact-html-converter/node'
-```
-
-If you use it in the browser import the browser integration:  
-
-```js
-import PreactHTMLConverter from 'preact-html-converter/browser'
-```
-
 ## Example
 
 ```js
-import Preact from 'preact';
-import PreactHTMLConverter from 'preact-html-converter/node';
+import { h, Component } from 'preact';
+import { PreactHTMLConverter } from 'preact-html-converter';
 
-class Test extends Preact.Component {
+class Test extends Component {
     render() (
         return <div>{this.props.text}</div>;
     );
@@ -51,7 +39,7 @@ converter.registerComponent('test', Test);
 
 const html = '<div class="my-div"><Test text="Hello World" /></div>';
 
-class App extends Preact.Component {
+class App extends Component {
     render() {
         return (
             <div class="my-app">
@@ -69,7 +57,7 @@ The PreactHTMLConverter is also able to create Preact components from the HTML s
 Please note that any sibling nodes of a Preact component will not be rendered! Make sure to wrap the component with a div element.
 
 ### Static rendering
-If you just want to quickly render a html string, you can import the `convertStatic` function of this module. With this function only the root node will be converted to a React element. All child nodes will be rendered with `dangerouslySetInnerHTML`.
+If you just want to quickly render a html string, you can import the `convertStatic` function of this module. With this function only the root node will be converted to a Preact element. All child nodes will be rendered with `dangerouslySetInnerHTML`.
 
 ## License
 
