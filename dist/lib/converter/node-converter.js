@@ -60,6 +60,7 @@ function BaseConverter(parser) {
             if (typeof htmlString !== "string") {
                 return null;
             }
+            htmlString = utils_1.trimHTMLString(htmlString);
             var fragment = parser.parseFragment(htmlString);
             if (fragment.childNodes.length > 0) {
                 return traverseNodeTree(fragment, registeredComponents);
@@ -77,6 +78,7 @@ function baseConvertStatic(htmlString, parser) {
     if (typeof htmlString !== "string") {
         return null;
     }
+    htmlString = utils_1.trimHTMLString(htmlString);
     var fragment = parser.parseFragment(htmlString);
     if (fragment.childNodes.length > 0) {
         var rootElement = void 0;

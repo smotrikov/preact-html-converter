@@ -1,7 +1,7 @@
 import { Attribute, DefaultTreeElement, DefaultTreeNode, DefaultTreeTextNode, DefaultTreeCommentNode, DefaultTreeDocumentFragment } from "parse5";
 import { ComponentConstructor, h, VNode } from "preact";
 import { NodeParser } from "../parser/node-parser";
-import { assign, NodeType, convertStylesToObject } from "../utils";
+import { assign, NodeType, convertStylesToObject, trimHTMLString } from "../utils";
 
 const convertAttributes = (attributes: Attribute[], key: number): Object => {
     const convAttrs: {[key: string]: Object} = {
@@ -81,6 +81,8 @@ export function BaseConverter(parser: NodeParser) {
                 return null;
             }
 
+            htmlString = trimHTMLString(htmlString);
+
             const fragment = parser.parseFragment(htmlString);
 
             if (fragment.childNodes.length > 0) {
@@ -100,6 +102,8 @@ export function baseConvertStatic(htmlString: string, parser: NodeParser) {
     if (typeof htmlString !== "string") {
         return null;
     }
+
+    htmlString = trimHTMLString(htmlString);
 
     const fragment = parser.parseFragment(htmlString);
 

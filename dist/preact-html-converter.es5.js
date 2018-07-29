@@ -36,7 +36,6 @@ var __assign = function() {
     return __assign.apply(this, arguments);
 };
 
-var assign = function (target, source) { return (__assign({}, target, source)); };
 var NodeType;
 (function (NodeType) {
     NodeType["Text"] = "#text";
@@ -61,6 +60,11 @@ var convertStylesToObject = function (styles) {
         return obj;
     }, {});
 };
+var trimHTMLString = function (html) {
+    html = html.replace(/\n|\t|\r|\0/g, "");
+    return html;
+};
+var assign = function (target, source) { return (__assign({}, target, source)); };
 
 var convertAttributes = function (attributes, key) {
     var convAttrs = {
@@ -120,6 +124,7 @@ function BaseConverter(parser) {
             if (typeof htmlString !== "string") {
                 return null;
             }
+            htmlString = trimHTMLString(htmlString);
             var fragment = parser.parseFragment(htmlString);
             if (fragment.childNodes.length > 0) {
                 return traverseNodeTree(fragment, registeredComponents);
@@ -135,6 +140,7 @@ function baseConvertStatic(htmlString, parser) {
     if (typeof htmlString !== "string") {
         return null;
     }
+    htmlString = trimHTMLString(htmlString);
     var fragment = parser.parseFragment(htmlString);
     if (fragment.childNodes.length > 0) {
         var rootElement = void 0;

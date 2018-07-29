@@ -1,6 +1,6 @@
 import { ComponentConstructor, h, VNode } from "preact";
 import { BrowserParser } from "../parser/browser-parser";
-import { assign, NodeType, convertStylesToObject } from "../utils";
+import { assign, NodeType, convertStylesToObject, trimHTMLString } from "../utils";
 
 
 const convertAttributes = (attributes: NamedNodeMap, key: number): Object => {
@@ -72,6 +72,8 @@ export function BaseConverter(parser: BrowserParser) {
                 return null;
             }
 
+            htmlString = trimHTMLString(htmlString);
+
             const fragment = parser.parseFragment(htmlString);
 
             if (fragment.childNodes.length > 0) {
@@ -91,6 +93,8 @@ export function baseConvertStatic(htmlString: string, parser: BrowserParser) {
     if (typeof htmlString !== "string") {
         return null;
     }
+
+    htmlString = trimHTMLString(htmlString);
 
     const fragment = parser.parseFragment(htmlString);
 

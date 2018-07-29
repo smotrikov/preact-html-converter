@@ -102,4 +102,35 @@ describe('main:browser', () => {
 
 		expect(converter.convert(text)[0]).toBe(text);
 	});
+
+	it('should ignore newlines', () => {
+		const converter = PreactHTMLConverter();
+		const html = `
+<ul>
+	<li>One</li>
+	<li>Two</li>
+	<li>Three</li>
+	<li>Four</li>
+	<li>Five</li>
+</ul>
+`;
+		const resultHtml = '<ul><li>One</li><li>Two</li><li>Three</li><li>Four</li><li>Five</li></ul>';
+
+		renderTest(converter.convert(html)[0], resultHtml);
+	});
+
+	it('should ignore newlines on static render', () => {
+		const html = `
+<ul>
+	<li>One</li>
+	<li>Two</li>
+	<li>Three</li>
+	<li>Four</li>
+	<li>Five</li>
+</ul>
+`;
+		const resultHtml = '<ul><li>One</li><li>Two</li><li>Three</li><li>Four</li><li>Five</li></ul>';
+
+		renderTest(convertStatic(html), resultHtml);
+	});
 });

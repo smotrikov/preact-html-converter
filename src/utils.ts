@@ -1,11 +1,6 @@
 export type ExclusiveKeys<T, U> = Pick<T, Exclude<keyof T, keyof U>>
 export type MergedProperties<T, U> = {[K in keyof T & keyof U]: U[K]}
 
-export const assign = <T extends object, U extends object>(target: T, source: U) => ({
-    ...(target as object),
-    ...(source as object)
-} as ExclusiveKeys<T, U> & ExclusiveKeys<U, T> & MergedProperties<T, U>);
-
 export enum NodeType {
     Text = '#text',
     Comment = '#comment',
@@ -37,3 +32,14 @@ export const convertStylesToObject = (styles: string): Object => {
             return obj;
         }, {});
 };
+
+export const trimHTMLString = (html: string) => {
+    html = html.replace(/\n|\t|\r|\0/g, "");
+
+    return html;
+};
+
+export const assign = <T extends object, U extends object>(target: T, source: U) => ({
+    ...(target as object),
+    ...(source as object)
+} as ExclusiveKeys<T, U> & ExclusiveKeys<U, T> & MergedProperties<T, U>);

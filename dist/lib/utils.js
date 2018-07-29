@@ -8,7 +8,6 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
     return t;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.assign = function (target, source) { return (__assign({}, target, source)); };
 var NodeType;
 (function (NodeType) {
     NodeType["Text"] = "#text";
@@ -33,3 +32,8 @@ exports.convertStylesToObject = function (styles) {
         return obj;
     }, {});
 };
+exports.trimHTMLString = function (html) {
+    html = html.replace(/\n|\t|\r|\0/g, "");
+    return html;
+};
+exports.assign = function (target, source) { return (__assign({}, target, source)); };
