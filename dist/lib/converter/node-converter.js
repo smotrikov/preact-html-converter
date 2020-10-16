@@ -1,5 +1,17 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.baseConvertStatic = exports.BaseConverter = void 0;
 var preact_1 = require("preact");
 var utils_1 = require("../utils");
 var convertAttributes = function (attributes, key) {
@@ -14,17 +26,18 @@ var convertAttributes = function (attributes, key) {
     return convAttrs;
 };
 var convertElement = function (element, key, registeredComponents) {
-    var component = registeredComponents.get(element.nodeName.toLowerCase());
+    var entry = registeredComponents.get(element.nodeName.toLowerCase());
     var attributes = convertAttributes(element.attrs, key);
     var tagName = element.tagName.toLowerCase();
+    var props = __assign(__assign({}, attributes), (entry ? entry.props : {}));
     if (element.childNodes.length === 0) {
-        return component ? preact_1.h(component, attributes) : preact_1.h(tagName, attributes);
+        return entry ? preact_1.h(entry.component, props) : preact_1.h(tagName, props);
     }
     var children = new Array();
     for (var i = 0; i < element.childNodes.length; i++) {
         children.push(convertNode(element.childNodes[i], i, registeredComponents));
     }
-    return component ? preact_1.h(component, attributes, children) : preact_1.h(tagName, attributes, children);
+    return entry ? preact_1.h(entry.component, props, children) : preact_1.h(tagName, props, children);
 };
 var convertNode = function (node, key, registeredComponents) {
     if (isTextNode(node) && node.value.trim() !== "") {
@@ -64,8 +77,12 @@ function BaseConverter(parser) {
             }
             return null;
         },
-        registerComponent: function (name, component) {
-            registeredComponents.set(name.toLowerCase(), component);
+        registerComponent: function (name, component, props) {
+            if (props === void 0) { props = {}; }
+            registeredComponents.set(name.toLowerCase(), {
+                component: component,
+                props: props
+            });
         }
     };
 }

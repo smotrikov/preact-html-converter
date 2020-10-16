@@ -64,7 +64,7 @@ var trimHTMLString = function (html) {
     html = html.replace(/\n|\t|\r|\0/g, "");
     return html;
 };
-var assign = function (target, source) { return (__assign({}, target, source)); };
+var assign = function (target, source) { return (__assign(__assign({}, target), source)); };
 
 var convertAttributes = function (attributes, key) {
     var convAttrs = {
@@ -78,17 +78,18 @@ var convertAttributes = function (attributes, key) {
     return convAttrs;
 };
 var convertElement = function (element, key, registeredComponents) {
-    var component = registeredComponents.get(element.nodeName.toLowerCase());
+    var entry = registeredComponents.get(element.nodeName.toLowerCase());
     var attributes = convertAttributes(element.attrs, key);
     var tagName = element.tagName.toLowerCase();
+    var props = __assign(__assign({}, attributes), (entry ? entry.props : {}));
     if (element.childNodes.length === 0) {
-        return component ? h(component, attributes) : h(tagName, attributes);
+        return entry ? h(entry.component, props) : h(tagName, props);
     }
     var children = new Array();
     for (var i = 0; i < element.childNodes.length; i++) {
         children.push(convertNode(element.childNodes[i], i, registeredComponents));
     }
-    return component ? h(component, attributes, children) : h(tagName, attributes, children);
+    return entry ? h(entry.component, props, children) : h(tagName, props, children);
 };
 var convertNode = function (node, key, registeredComponents) {
     if (isTextNode(node) && node.value.trim() !== "") {
@@ -128,8 +129,12 @@ function BaseConverter(parser) {
             }
             return null;
         },
-        registerComponent: function (name, component) {
-            registeredComponents.set(name.toLowerCase(), component);
+        registerComponent: function (name, component, props) {
+            if (props === void 0) { props = {}; }
+            registeredComponents.set(name.toLowerCase(), {
+                component: component,
+                props: props
+            });
         }
     };
 }
