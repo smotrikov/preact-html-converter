@@ -3,6 +3,11 @@ import { ComponentConstructor, h, VNode } from "preact";
 import { NodeParser } from "../parser/node-parser";
 import { assign, NodeType, convertStylesToObject, trimHTMLString } from "../utils";
 
+interface MapEntry  {
+	component: ComponentConstructor,
+	props?: object
+}
+
 const convertAttributes = (attributes: Attribute[], key: number): Object => {
     const convAttrs: {[key: string]: Object} = {
         key: key.toString()
@@ -17,25 +22,30 @@ const convertAttributes = (attributes: Attribute[], key: number): Object => {
     return convAttrs;
 };
 
-const convertElement = (element: DefaultTreeElement, key: number, registeredComponents: Map<string, ComponentConstructor>): VNode => {
-    const component = registeredComponents.get(element.nodeName.toLowerCase());
-    const attributes = convertAttributes(element.attrs, key);
-    const tagName = element.tagName.toLowerCase();
+const convertElement = (element: DefaultTreeElement, key: number, registeredComponents: Map<string, MapEntry>): VNode => {
+	const entry = registeredComponents.get(element.nodeName.toLowerCase());
+	const attributes = convertAttributes(element.attrs, key);
+	const tagName = element.tagName.toLowerCase();
 
-    if (element.childNodes.length === 0) {
-        return component ? h(component, attributes) : h(tagName, attributes);
-    }
+	const props = {
+		...attributes,
+		...(entry ? entry.props : {})
+	} as Object;
 
-    const children = new Array<string|VNode>();
+	if (element.childNodes.length === 0) {
+		return entry ? h(entry.component, props) : h(tagName, props);
+	}
 
-    for (let i = 0; i < element.childNodes.length; i++) {
-        children.push(convertNode(element.childNodes[i], i, registeredComponents));
-    }
+	const children = new Array<string|VNode>();
 
-    return component ? h(component, attributes, children) : h(tagName, attributes, children);
+	for (let i = 0; i < element.childNodes.length; i++) {
+		children.push(convertNode(element.childNodes[i], i, registeredComponents));
+	}
+
+	return entry ? h(entry.component, props, children) : h(tagName, props, children);
 };
 
-const convertNode = (node: DefaultTreeNode, key: number, registeredComponents: Map<string, ComponentConstructor>): string|VNode => {
+const convertNode = (node: DefaultTreeNode, key: number, registeredComponents: Map<string, MapEntry>): string|VNode => {
     if (isTextNode(node) && node.value.trim() !== "") {
         return node.value;
     }
@@ -47,7 +57,7 @@ const convertNode = (node: DefaultTreeNode, key: number, registeredComponents: M
     return null;
 };
 
-const traverseNodeTree = (rootNode: DefaultTreeDocumentFragment, registeredComponents: Map<string, ComponentConstructor>): Array<string|VNode> => {
+const traverseNodeTree = (rootNode: DefaultTreeDocumentFragment, registeredComponents: Map<string, MapEntry>): Array<string|VNode> => {
     const nodeTree = new Array<string|VNode>();
 
     for (let i = 0; i < rootNode.childNodes.length; i++) {
@@ -66,7 +76,7 @@ const isElement = (node: DefaultTreeNode): node is DefaultTreeElement => {
 };
 
 export function BaseConverter(parser: NodeParser) {
-    const registeredComponents = new Map<string, ComponentConstructor>();
+    const registeredComponents = new Map<string, MapEntry>();
 
     return {
         convert(htmlString: string) {
@@ -87,8 +97,11 @@ export function BaseConverter(parser: NodeParser) {
             return null;
         },
 
-        registerComponent(name: string, component: ComponentConstructor) {
-            registeredComponents.set(name.toLowerCase(), component);
+        registerComponent(name: string, component: ComponentConstructor,props:object = {}) {
+            registeredComponents.set(name.toLowerCase(), {
+            	component: component,
+				props: props
+            });
         }
     };
 };

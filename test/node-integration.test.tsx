@@ -10,7 +10,7 @@ class Test extends Component<{text: string}, {}> {
 
 const renderTest = (vNode: VNode|string, expectedHTML: string) => {
 	if (typeof vNode === "string") {
-		
+
 	} else {
 		expect(render(vNode)).toBe(expectedHTML);
 	}
@@ -18,7 +18,7 @@ const renderTest = (vNode: VNode|string, expectedHTML: string) => {
 
 describe('main:browser', () => {
 	it('should return null if provided HTML is not a string', () => {
-		const input = 123 as string;
+		const input = 123 as any as string;
 		const converter = PreactHTMLConverter();
 
 		expect(converter.convert(input)).toBeFalsy();
